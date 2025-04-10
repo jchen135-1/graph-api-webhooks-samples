@@ -25,6 +25,11 @@ app.get('/', function(req, res) {
   res.send('<pre>' + JSON.stringify(received_updates, null, 2) + '</pre>');
 });
 
+app.get('/sampleapp', function(req, res) {
+  console.log(req);
+  res.send(received_updates[0]);
+});
+
 app.get(['/facebook', '/instagram', '/threads'], function(req, res) {
   if (
     req.query['hub.mode'] == 'subscribe' &&
