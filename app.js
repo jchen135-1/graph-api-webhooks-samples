@@ -27,12 +27,12 @@ app.get('/', function(req, res) {
 
 app.get('/sampleapp', function(req, res) {
   console.log(req);
-  res.send(received_updates);
+  res.send(received_updates.slice(0, 5));
 });
 
-app.get('/sampleapplatest', function(req, res) {
+app.get('/sampleappall', function(req, res) {
   console.log(req);
-  res.send(received_updates[0]);
+  res.send(received_updates);
 });
 
 app.get(['/facebook', '/instagram', '/threads'], function(req, res) {
