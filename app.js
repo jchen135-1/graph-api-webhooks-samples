@@ -27,6 +27,11 @@ app.get('/', function(req, res) {
 
 app.get('/sampleapp', function(req, res) {
   console.log(req);
+  res.send(received_updates);
+});
+
+app.get('/sampleapplatest', function(req, res) {
+  console.log(req);
   res.send(received_updates[0]);
 });
 
