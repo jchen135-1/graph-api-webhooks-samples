@@ -22,7 +22,7 @@ var received_updates = [];
 var unified_updates = [];
 
 const registerUpdate = (body) => {
-  if (body.field.contains('business_install')) {
+  if (body.object === 'application') {
     unified_updates.unshift(body);
     unified_updates = unified_updates.slice(0, 10);
   } else {
