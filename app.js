@@ -19,6 +19,17 @@ app.use(bodyParser.json());
 
 var token = process.env.TOKEN || 'token';
 var received_updates = [];
+var unified_updates = [];
+
+const registerUpdate = (body) => {
+  if (body.field.contains('business_install')) {
+    unified_updates.unshift(body);
+    unified_updates = unified_updates.slice(0, 10);
+  } else {
+    received_updates.unshift(body);
+    received_updates = received_updates.slice(0, 10);
+  }
+};
 
 app.get('/', function(req, res) {
   console.log(req);
@@ -28,6 +39,11 @@ app.get('/', function(req, res) {
 app.get('/sampleapp', function(req, res) {
   console.log(req);
   res.send(received_updates.slice(0, 5));
+});
+
+app.get('/sampleappunified', function(req, res) {
+  console.log(req);
+  res.send(unified_updates.slice(0, 5));
 });
 
 app.get('/sampleappall', function(req, res) {
@@ -57,7 +73,7 @@ app.post('/facebook', function(req, res) {
 
   console.log('request header X-Hub-Signature validated');
   // Process the Facebook updates here
-  received_updates.unshift(req.body);
+  registerUpdate(req.body);
   res.sendStatus(200);
 });
 
@@ -65,7 +81,7 @@ app.post('/instagram', function(req, res) {
   console.log('Instagram request body:');
   console.log(req.body);
   // Process the Instagram updates here
-  received_updates.unshift(req.body);
+  registerUpdate(req.body);
   res.sendStatus(200);
 });
 
@@ -73,7 +89,7 @@ app.post('/threads', function(req, res) {
   console.log('Threads request body:');
   console.log(req.body);
   // Process the Threads updates here
-  received_updates.unshift(req.body);
+  registerUpdate(req.body);
   res.sendStatus(200);
 });
 
