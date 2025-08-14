@@ -62,6 +62,11 @@ app.get(['/facebook', '/instagram', '/threads'], function(req, res) {
   }
 });
 
+app.post('/clear', function(req, res) {
+  unified_updates = [];
+  res.sendStatus(200);
+});
+
 app.post('/facebook', function(req, res) {
   console.log('Facebook request body:', req.body);
 
