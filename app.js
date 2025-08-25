@@ -20,6 +20,7 @@ app.use(bodyParser.json());
 var token = process.env.TOKEN || 'token';
 var received_updates = [];
 var unified_updates = [];
+var updates_by_app_id = {};
 
 const registerUpdate = (body) => {
   if (body.object === 'application') {
@@ -28,6 +29,21 @@ const registerUpdate = (body) => {
   } else {
     received_updates.unshift(body);
     received_updates = received_updates.slice(0, 10);
+  }
+};
+
+const registerUpdateByAppId = (body) => {
+  if (body.object === 'application') {
+    const appId = body.entry[0].id;
+
+    if(appId) {
+      if (appId in updates_by_app_id) {
+        updates_by_app_id[appId].unshift(body);
+        updates_by_app_id[appId] = updates_by_app_id[appId].slice(0, 5);
+      } else {
+        updates_by_app_id[appId] = [body];
+      }
+    }
   }
 };
 
@@ -44,6 +60,16 @@ app.get('/sampleapp', function(req, res) {
 app.get('/sampleappunified', function(req, res) {
   console.log(req);
   res.send(unified_updates.slice(0, 5));
+});
+
+app.get('/unified/:appId', function(req, res) {
+  const userId = req.params.userId;
+
+  if (userId in updates_by_app_id) {
+    res.send(updates_by_app_id[userId].slice(0, 5));
+  } else {
+    res.send([]);
+  }
 });
 
 app.get('/sampleappall', function(req, res) {
@@ -68,7 +94,7 @@ app.post('/clear', function(req, res) {
 });
 
 app.post('/facebook', function(req, res) {
-  console.log('Facebook request body:', req.body);
+  // console.log('Facebook request body:', req.body);
 
   if (!req.isXHubValid()) {
     console.log('Warning - request header X-Hub-Signature not present or invalid');
@@ -83,16 +109,16 @@ app.post('/facebook', function(req, res) {
 });
 
 app.post('/instagram', function(req, res) {
-  console.log('Instagram request body:');
-  console.log(req.body);
+  // console.log('Instagram request body:');
+  // console.log(req.body);
   // Process the Instagram updates here
   registerUpdate(req.body);
   res.sendStatus(200);
 });
 
 app.post('/threads', function(req, res) {
-  console.log('Threads request body:');
-  console.log(req.body);
+  // console.log('Threads request body:');
+  // console.log(req.body);
   // Process the Threads updates here
   registerUpdate(req.body);
   res.sendStatus(200);
