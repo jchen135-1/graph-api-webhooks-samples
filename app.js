@@ -63,10 +63,10 @@ app.get('/sampleappunified', function(req, res) {
 });
 
 app.get('/unified/:appId', function(req, res) {
-  const userId = req.params.userId;
+  const appId = req.params.appId;
 
-  if (userId in updates_by_app_id) {
-    res.send(updates_by_app_id[userId].slice(0, 5));
+  if (appId in updates_by_app_id) {
+    res.send(updates_by_app_id[appId].slice(0, 5));
   } else {
     res.send([]);
   }
