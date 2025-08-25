@@ -120,7 +120,8 @@ app.post('/threads', function(req, res) {
   // console.log('Threads request body:');
   // console.log(req.body);
   // Process the Threads updates here
-  registerUpdate(req.body);
+  // console.log(req.body.entry)
+  registerUpdateByAppId(req.body);
   res.sendStatus(200);
 });
 
