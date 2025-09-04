@@ -38,11 +38,15 @@ const registerUpdateByAppId = (body) => {
 
     if(appId) {
       if (appId in updates_by_app_id) {
+        console.log('registering in existing app ID: ', appId);
         updates_by_app_id[appId].unshift(body);
         updates_by_app_id[appId] = updates_by_app_id[appId].slice(0, 5);
       } else {
+        console.log('registering new app ID: ', appId);
         updates_by_app_id[appId] = [body];
       }
+    } else {
+      console.log('No app ID found...');
     }
   }
 };
@@ -117,9 +121,7 @@ app.post('/instagram', function(req, res) {
 });
 
 app.post('/threads', function(req, res) {
-  console.log('Threads request body:');
-  console.log(req.body);
-  console.log(req.body.entry);
+  console.log('Threads request received');
   registerUpdateByAppId(req.body);
   res.sendStatus(200);
 });
